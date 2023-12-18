@@ -28,7 +28,7 @@ func Match(expr string, data map[string]interface{}) (bool, error) {
 	data["false"] = false
 
 	// 匹配表达式与输入数据
-	result := eval(parseExpr, data)
+	result := Eval(parseExpr, data)
 
 	// 返回匹配结果
 	if _, ok := result.(error); ok {
@@ -37,13 +37,13 @@ func Match(expr string, data map[string]interface{}) (bool, error) {
 	return result.(bool), nil
 }
 
-func eval(expr ast.Expr, data map[string]interface{}) interface{} {
+func Eval(expr ast.Expr, data map[string]interface{}) interface{} {
 	switch expr := expr.(type) {
 	case *ast.BasicLit: // 匹配到数据
 		return getlitValue(expr)
 	case *ast.BinaryExpr: // 匹配到子树
-		x := eval(expr.X, data)
-		y := eval(expr.Y, data)
+		x := Eval(expr.X, data)
+		y := Eval(expr.Y, data)
 		if x == nil || y == nil {
 			return fmt.Errorf("%+v, %+v is nil", x, y)
 		}
@@ -66,9 +66,9 @@ func eval(expr ast.Expr, data map[string]interface{}) interface{} {
 	case *ast.CallExpr: // 匹配到函数
 		return calculateForFunc(expr.Fun.(*ast.Ident).Name, expr.Args, data)
 	case *ast.ParenExpr: // 匹配到括号
-		return eval(expr.X, data)
+		return Eval(expr.X, data)
 	case *ast.UnaryExpr: // 匹配到一元表达式
-		x := eval(expr.X, data)
+		x := Eval(expr.X, data)
 		if x == nil {
 			return fmt.Errorf("%+v is nil", x)
 		}

@@ -67,6 +67,28 @@ if val, err := Expression(tmp); err != nil {
 }
 ```
 
+#### 注册自定义函数
+
+```go
+
+import "github.com/BeCrafter/go-parser"
+
+// MaxDemo 自定义Max函数
+func MaxDemo(args []ast.Expr, data map[string]interface{}) interface{} {
+    num1 := goparser.Eval(args[0], data)
+    num2 := goparser.Eval(args[1], data)
+    if num1 > num2 {
+        return num1
+    }
+
+    return num2
+}
+
+// 在库中注册 `max` 函数
+goparser.RegisterFunc("max", MaxDemo)
+
+```
+
 ### 其他说明
 
 #### 支持类型
