@@ -10,7 +10,7 @@
 ### 安装
 
 ```bash
-go get -u github.com/BeCrafter/go-parser@master
+go get -u github.com/BeCrafter/go-parser@latest
 ```
 
 ### 使用
